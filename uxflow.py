@@ -1,4 +1,5 @@
 import streamlit as st
+from openai import OpenAI
 import openai
 
 # Optional: Use dotenv or hardcode your key
@@ -23,14 +24,15 @@ if st.button("Generate Flow"):
 
             User Flow:
             """
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "You are a helpful UX design assistant."},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.7
-            )
-            user_flow = response['choices'][0]['message']['content']
-            st.success("User flow generated!")
-            st.markdown(user_flow)
+           client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a helpful UX design assistant."},
+        {"role": "user", "content": prompt}
+    ],
+    temperature=0.7
+)
+user_flow = response.choices[0].message.content
+
