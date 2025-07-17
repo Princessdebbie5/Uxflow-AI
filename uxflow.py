@@ -16,10 +16,9 @@ if st.button("Generate Flow"):
         st.warning("Please enter an app idea to continue.")
     else:
         with st.spinner("Generating your user flow..."):
+           
             prompt = f"""
             You are a UX design assistant. Based on the following app idea, generate a simple, clear user flow in numbered format.
-
-            App Idea: {app_idea}
 
             from openai import OpenAI
 
