@@ -1,8 +1,8 @@
 import streamlit as st
 import openai
 
-# Optional: Use dotenv or hardcode your key
-openai.api_key = st.secrets["OPENAI_API_KEY"]  # You’ll set this in Streamlit Cloud secrets later
+# Use secret key stored in Streamlit Cloud
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 st.set_page_config(page_title="UXFlow AI", layout="centered")
 
@@ -17,16 +17,23 @@ if st.button("Generate Flow"):
     else:
         with st.spinner("Generating your user flow..."):
             prompt = f"""
-            You are a UX design assistant. Based on the following app idea, generate a simple, clear user flow in numbered format.
+You are a UX design assistant. Based on the following app idea, generate a simple, clear user flow in numbered format.
 
-            from openai import OpenAI
+App Idea: {app_idea}
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+User Flow:
+"""
 
-response = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[...],
-    temperature=0.7,
-)
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful UX design assistant."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7
+            )
+            user_flow = response['choices'][0]['message']['content']
+            st.success("✅ User flow generated!")
+            st.markdown(user_flow)
 
-
+ 
